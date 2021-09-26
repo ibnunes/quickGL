@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
-// quickGL - A quick and easy to learn OpenGL wrapper
+// quickGL - A quick and easy to use OpenGL wrapper
 //
 // RUNTIME LIBRARIES PACKAGE
-//    camera.h
+//    camera.hpp
 //
 // DESCRIPTION:
 // -----------
@@ -11,7 +11,9 @@
 // 
 // FROM:
 // -----
-// OpenGL Tutorial
+//      Learn OpenGL (https://learnopengl.com/)
+// 
+// DISCLAIMER: Small changes to the original source code might have been made.
 //------------------------------------------------------------------------------
 
 #ifndef CAMERA_H

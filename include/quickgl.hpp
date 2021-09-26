@@ -1,3 +1,20 @@
+//------------------------------------------------------------------------------
+//
+// quickGL - A quick and easy to use OpenGL wrapper
+//
+// RUNTIME LIBRARIES PACKAGE
+//    camera.hpp
+//
+// DESCRIPTION:
+// -----------
+// Main library.
+// Provides the Scene class and the extendable qgl_callback namespace.
+// 
+// AUTHORS:
+// -------
+//      Igor Nunes (https://github.com/thoga31)
+//------------------------------------------------------------------------------
+
 #ifndef QUICKGL_H
 #define QUICKGL_H
 
@@ -25,6 +42,16 @@
 #endif
 
 using namespace std;
+
+
+class QGLException : public exception {
+public:
+    QGLException(const string &msg) : message(msg) {}
+    virtual const char* what() const throw ();
+private:
+    const string message;
+};
+
 
 class Scene {
 private:
@@ -57,8 +84,6 @@ protected:
     const unsigned DEFAULT_SCR_WIDTH  = 600;
     const string   DEFAULT_SCR_TITLE  = "";
 
-    /* Callbacks */
-
 public:
     /* Initialization, render cycle and finalization */
     void initialize(void);
@@ -77,6 +102,10 @@ public:
     void setMouseButtonCallback(GLFWmousebuttonfun);
     void setCursorPositionCallback(GLFWcursorposfun);
     void setScrollCallback(GLFWscrollfun);
+
+    // Constructor and destructor
+    Scene() {};
+    ~Scene() { terminate(); };
 };
 
 

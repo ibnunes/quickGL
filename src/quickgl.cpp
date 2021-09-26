@@ -1,4 +1,24 @@
+//------------------------------------------------------------------------------
+//
+// quickGL - A quick and easy to use OpenGL wrapper
+//
+// RUNTIME LIBRARIES PACKAGE
+//    camera.cpp
+//
+// DESCRIPTION:
+// -----------
+// Main library.
+// Provides the Scene class and the extendable qgl_callback namespace.
+// 
+// AUTHORS:
+// -------
+//      Igor Nunes (https://github.com/thoga31)
+//------------------------------------------------------------------------------
+
+#include <iostream>
 #include "quickgl.hpp"
+
+const char* QGLException::what(void) const throw () { return message.c_str(); }
 
 GLFWwindow* Scene::getWindow(void) {
     return this->window;
@@ -20,12 +40,16 @@ bool Scene::init_glfw(void) {
     
     glfwMakeContextCurrent(this->window);
     
-    this->setFrameBufferSizeCallback(this->framebuffer_size_callback);
-    this->setMouseButtonCallback(this->mousebtn_callback);
-    this->setCursorPositionCallback(this->mouse_callback);
-    this->setScrollCallback(this->scroll_callback);
+    if (this->framebuffer_size_callback != nullptr)
+        this->setFrameBufferSizeCallback(this->framebuffer_size_callback);
+    if (this->mousebtn_callback != nullptr)
+        this->setMouseButtonCallback(this->mousebtn_callback);
+    if (this->mouse_callback != nullptr)
+        this->setCursorPositionCallback(this->mouse_callback);
+    if (this->scroll_callback != nullptr)
+        this->setScrollCallback(this->scroll_callback);
 
-    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    // glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     return true;
 }
@@ -37,7 +61,6 @@ int Scene::init_glad(void) {
 #endif
 
 
-
 void Scene::initialize(void) {
     this->initialize(DEFAULT_SCR_HEIGHT, DEFAULT_SCR_WIDTH, DEFAULT_SCR_TITLE);
 }
@@ -47,21 +70,25 @@ void Scene::initialize(const unsigned width, const unsigned height) {
 }
 
 void Scene::initialize(const unsigned width, const unsigned height, string title) {
-    this->success = true;
+    try {
+        this->scr_height = height;
+        this->scr_width  = width;
+        this->scr_title  = title;
 
-    this->scr_height = height;
-    this->scr_width  = width;
-    this->scr_title  = title;
+        if (!this->init_glfw())
+            throw QGLException("Failed to create window.");
 
-    if (!this->init_glfw()) {
+        #ifdef QGL_GLAD
+        if (!this->init_glad())
+            throw QGLException("Failed to initialize GLAD.");
+        #endif
+
+        this->success = true;
+    } catch (QGLException &e) {
+        std::cerr << "QuickGL Error: " << e.what() << std::endl;
+        std::cerr << "QuickGL is aborting launch." << std::endl;
         this->success = false;
     }
-
-    #ifdef QGL_GLAD
-    if (!this->init_glad()) {
-        this->success = false;
-    }
-    #endif
 }
 
 bool Scene::launchSuccessful(void) {
