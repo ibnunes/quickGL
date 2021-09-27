@@ -18,6 +18,18 @@
 #include <iostream>
 #include "quickgl.hpp"
 
+namespace qgl_callback {
+    Scene *scene;
+
+    void bindInstance(Scene *scn) {
+        scene = scn;
+    }
+
+    Scene* getInstance(void) {
+        return scene;
+    }
+}
+
 const char* QGLException::what(void) const throw () { return message.c_str(); }
 
 GLFWwindow* Scene::getWindow(void) {
@@ -99,6 +111,8 @@ void Scene::run(void) {
     while (!glfwWindowShouldClose(this->getWindow())) {
         qgl_callback::bindInstance(this);
         this->refresh();
+        glfwSwapBuffers(this->window);
+        glfwPollEvents();
     }
 }
 
@@ -107,7 +121,6 @@ void Scene::finalize(void) {
 }
 
 
-/*
 void Scene::setFrameBufferSizeCallback(GLFWframebuffersizefun callback) {
     glfwSetFramebufferSizeCallback(this->window, callback);
 }
@@ -123,4 +136,3 @@ void Scene::setCursorPositionCallback(GLFWcursorposfun callback) {
 void Scene::setScrollCallback(GLFWscrollfun callback) {
     glfwSetScrollCallback(this->window, callback);
 }
-*/

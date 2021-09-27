@@ -105,7 +105,7 @@ public:
 
     // Constructor and destructor
     Scene() {};
-    ~Scene() { terminate(); };
+    ~Scene() { this->finalize(); };
 };
 
 
@@ -115,15 +115,8 @@ public:
  * At each iteration, the Scene will bind itself to this namespace.
  * */
 namespace qgl_callback {
-    Scene* scene;
-
-    void bindInstance(Scene *scn) {
-        scene = scn;
-    }
-
-    Scene* getInstance(void) {
-        return scene;
-    }
+    void bindInstance(Scene*);
+    Scene* getInstance(void);
 }
 
 #endif
