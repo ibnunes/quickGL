@@ -1,9 +1,32 @@
+//------------------------------------------------------------------------------
+//
+// quickGL - A quick and easy to use OpenGL wrapper
+//
+// TEST SUITE
+//    test.cpp
+//
+// DESCRIPTION:
+// -----------
+// Tests the basic functionality of quickGL and demonstrates the qgl_callback
+// namespace extension and access to getInstante() method.
+// 
+// AUTHORS:
+// -------
+//      Igor Nunes (https://github.com/thoga31)
+// 
+// LICENSE:
+// -------
+//      GNU GPL V3.0
+//------------------------------------------------------------------------------
+
 #include <iostream>
 #include "quickgl.hpp"
 
+using namespace qgl;
+
 /* Example of how to extend the qgl_callback namespace.
  * getInstance() must be used to access the Scene instance currently bound. */
-namespace qgl_callback {
+namespace qgl::callback {
     void foo(GLFWwindow *window, int button, int action, int mods) {
         getInstance()->finalize();
     }
@@ -26,7 +49,7 @@ int main(int argc, char const *argv[]) {
     scene.initialize(1000, 500, "Teste");
 
     // Define a função de callback dos botões do rato
-    scene.setMouseButtonCallback(qgl_callback::foo);
+    scene.setMouseButtonCallback(qgl::callback::foo);
 
     // Checks if the OpenGL scene was launched successfully
     if (!scene.launchSuccessful())

@@ -13,6 +13,10 @@
 // AUTHORS:
 // -------
 //      Igor Nunes (https://github.com/thoga31)
+// 
+// LICENSE:
+// -------
+//      GNU GPL V3.0
 //------------------------------------------------------------------------------
 
 #ifndef QUICKGL_H
@@ -41,6 +45,7 @@
     #include FT_FREETYPE_H
 #endif
 
+namespace qgl {
 using namespace std;
 
 
@@ -53,21 +58,33 @@ private:
 };
 
 
+typedef struct {
+    float lastX;
+    float lastY;
+    bool  first;
+} mouse_data;
+
+/* === CLASS Scene ===
+ * A new instance creates an OpenGL window with independent properties.
+ * */
 class Scene {
 private:
-    bool success = false;
-    GLFWwindow* window;
+    bool success = false;       // Flag: indicates if launch was successful
+
+    GLFWwindow* window;         // The OpenGL window reference
     
-    unsigned scr_height;
-    unsigned scr_width;
-    string   scr_title;
+    unsigned scr_height;        // Window height
+    unsigned scr_width;         // Window width
+    string   scr_title;         // Window title
 
     /* Timing */
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
     float currentFrame;
 
-    Camera camera;
+    mouse_data mouse;           // Mouse last absolute position data
+
+    Camera camera;              // Camera manager
 
     GLFWframebuffersizefun framebuffer_size_callback = nullptr;
     GLFWmousebuttonfun     mousebtn_callback         = nullptr;
@@ -96,6 +113,7 @@ public:
 
     /* Properties and fields */
     GLFWwindow* getWindow(void);
+    mouse_data getMouseData(void);
 
     /* Callbacks */
     void setFrameBufferSizeCallback(GLFWframebuffersizefun);
@@ -109,14 +127,16 @@ public:
 };
 
 
-/* === NAMESPACE qgl_callback ===
+/* === NAMESPACE qgl::callback ===
  * Namespace to be extended with callback functions that might need to refer to
  * the Scene instance.
  * At each iteration, the Scene will bind itself to this namespace.
  * */
-namespace qgl_callback {
+namespace callback {
     void bindInstance(Scene*);
     Scene* getInstance(void);
+}
+
 }
 
 #endif

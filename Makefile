@@ -6,8 +6,12 @@ ifneq ($(OS), 'Windows_NT')
     CFLAGS += -D_POSIX_C_SOURCE
 endif
 
-# LIBS := -lGL -lGLU -lGLEW `pkg-config --libs glfw3` -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lstdc++fs -lfreetype -pthread -lm
+ifeq ($(shell uname -s), Darwin)
 LIBS := -lGLEW `pkg-config --libs glfw3` -lpthread -ldl -lfreetype -pthread -lm
+else
+LIBS := -lGL -lGLU -lGLEW `pkg-config --libs glfw3` -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lstdc++fs -lfreetype -pthread -lm
+endif
+
 LDFLAGS := -L/usr/local/lib
 SANITIZERFLAGS := -fsanitize=address -fsanitize=undefined
 
@@ -17,7 +21,7 @@ BINDIR := bin
 INCDIR := include
 DEPDIR := deps
 
-TARGET := bohr
+TARGET := test
 
 SOURCES += $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))

@@ -13,12 +13,18 @@
 // AUTHORS:
 // -------
 //      Igor Nunes (https://github.com/thoga31)
+// 
+// LICENSE:
+// -------
+//      GNU GPL V3.0
 //------------------------------------------------------------------------------
 
 #include <iostream>
 #include "quickgl.hpp"
 
-namespace qgl_callback {
+using namespace qgl;
+
+namespace qgl::callback {
     Scene *scene;
 
     void bindInstance(Scene *scn) {
@@ -34,6 +40,10 @@ const char* QGLException::what(void) const throw () { return message.c_str(); }
 
 GLFWwindow* Scene::getWindow(void) {
     return this->window;
+}
+
+mouse_data Scene::getMouseData(void) {
+    return this->mouse;
 }
 
 bool Scene::init_glfw(void) {
@@ -109,7 +119,7 @@ bool Scene::launchSuccessful(void) {
 
 void Scene::run(void) {
     while (!glfwWindowShouldClose(this->getWindow())) {
-        qgl_callback::bindInstance(this);
+        callback::bindInstance(this);
         this->refresh();
         glfwSwapBuffers(this->window);
         glfwPollEvents();
