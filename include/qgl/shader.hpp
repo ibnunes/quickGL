@@ -1,3 +1,21 @@
+//------------------------------------------------------------------------------
+//
+// quickGL - A quick and easy to use OpenGL wrapper
+//
+// RUNTIME LIBRARIES PACKAGE
+//    shader.hpp
+//
+// DESCRIPTION:
+// -----------
+// Manages shaders and the programs they're included in.
+//
+// FROM:
+// -----
+//      Learn OpenGL (https://learnopengl.com/)
+//
+// DISCLAIMER: Changes to the original source have been made.
+//------------------------------------------------------------------------------
+
 #ifndef QGL_SHADER_H
 #define QGL_SHADER_H
 
@@ -8,6 +26,8 @@
 #include <sstream>
 #include <iostream>
 #include <unordered_map>
+#include <filesystem>
+
 
 #define SHADER_VERTEX    0b00000001
 #define SHADER_FRAGMENT  0b00000010
@@ -19,13 +39,18 @@
 #define TYPE_COMPILATION 0b01000000
 #define TYPE_LINKING     0b10000000
 
+
 using namespace std;
+namespace fs = std::filesystem;
+
 
 enum QGlShaderProgramType {
+    Undefined,
     GraphicWithoutGeometry,
     GraphicWithGeometry,
     Compute
 };
+
 
 struct QGlShaderDef {
     uint16_t type;
@@ -33,6 +58,7 @@ struct QGlShaderDef {
     string   code;
     uint32_t id;
 };
+
 
 struct QGlShaderInfo {
     QGlShaderDef vertex;
@@ -64,6 +90,7 @@ private:
     QGlShaderInfo        shader;
     QGlShaderReport      report;
     QGlShaderProgramType type;
+    fs::path             rootPath;
 
     bool readShader(QGlShaderDef&);
     bool compile(QGlShaderDef&);
@@ -72,12 +99,18 @@ private:
     bool checkErrors(QGlShaderDef&);
     bool checkErrors(uint32_t, uint16_t);
 
+    static string canonicalPath(fs::path, string);
+
 public:
-    QGlShader() {}
-    QGlShader(const char*, const char*, const char* = nullptr);
-    QGlShader(const string, const string, const string = "");
+    QGlShader() : QGlShader("") {}
     QGlShader(const char*);
-    QGlShader(const string);
+    // QGlShader(const char*, const char*, const char* = nullptr);
+    // QGlShader(const string, const string, const string = "");
+    // QGlShader(const char*);
+    // QGlShader(const string);
+
+    QGlShader& withShaders(const string, const string, const string = "");
+    QGlShader& withShaders(const string);
 
     uint32_t getID() { return this->id; };
     bool     build();

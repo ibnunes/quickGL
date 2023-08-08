@@ -1,3 +1,21 @@
+//------------------------------------------------------------------------------
+//
+// quickGL - A quick and easy to use OpenGL wrapper
+//
+// RUNTIME LIBRARIES PACKAGE
+//    shader.cpp
+//
+// DESCRIPTION:
+// -----------
+// Manages shaders and the programs they're included in.
+//
+// FROM:
+// -----
+//      Learn OpenGL (https://learnopengl.com/)
+//
+// DISCLAIMER: Changes to the original source have been made.
+//------------------------------------------------------------------------------
+
 #include "qgl/shader.hpp"
 
 
@@ -32,35 +50,55 @@ const string QGlShaderReport::what() const throw ( ) {
     return log;
 }
 
-
+/*
 QGlShader::QGlShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath) :
     QGlShader(string(vertexPath), string(fragmentPath), geometryPath == nullptr ? "" : string(geometryPath)) {}
 
-
 QGlShader::QGlShader(const char* computePath) :
-    QGlShader(string(computePath))
-{}
-
+    QGlShader(string(computePath)) {}
 
 QGlShader::QGlShader(const string vertexPath, const string fragmentPath, const string geometryPath) {
-    this->shader.vertex.path   = vertexPath;
+    this->withShaders(vertexPath, fragmentPath, geometryPath);
+}
+
+QGlShader::QGlShader(const string computePath) {
+    this->withShaders(computePath);
+}
+*/
+
+QGlShader::QGlShader(const char* rootPath) {
+    this->rootPath = fs::path(rootPath);
+}
+
+
+string QGlShader::canonicalPath(fs::path root, string path) {
+    if (fs::path(path).is_absolute())
+        return path;
+    return (root / path).string();
+}
+
+
+QGlShader& QGlShader::withShaders(const string vertexPath, const string fragmentPath, const string geometryPath) {
+    this->shader.vertex.path   = QGlShader::canonicalPath(this->rootPath, vertexPath);
     this->shader.vertex.type   = SHADER_VERTEX;
-    this->shader.fragment.path = fragmentPath;
+    this->shader.fragment.path = QGlShader::canonicalPath(this->rootPath, fragmentPath);
     this->shader.fragment.type = SHADER_FRAGMENT;
     if (geometryPath.empty()) {
         this->type = QGlShaderProgramType::GraphicWithoutGeometry;
     } else {
-        this->shader.geometry.path = geometryPath;
+        this->shader.geometry.path = QGlShader::canonicalPath(this->rootPath, geometryPath);
         this->shader.geometry.type = SHADER_GEOMETRY;
         this->type = QGlShaderProgramType::GraphicWithGeometry;
     }
+    return *this;
 }
 
 
-QGlShader::QGlShader(const string computePath) {
-    this->shader.compute.path = computePath;
+QGlShader& QGlShader::withShaders(const string computePath) {
+    this->shader.compute.path = QGlShader::canonicalPath(this->rootPath, computePath);
     this->shader.compute.type = SHADER_COMPUTE;
     this->type = QGlShaderProgramType::Compute;
+    return *this;
 }
 
 
@@ -104,6 +142,8 @@ bool QGlShader::link() {
         case QGlShaderProgramType::GraphicWithoutGeometry:
             glAttachShader(this->id, this->shader.vertex.id);
             glAttachShader(this->id, this->shader.fragment.id);
+
+        default:
             break;
     }
 
@@ -122,6 +162,8 @@ bool QGlShader::link() {
         case QGlShaderProgramType::GraphicWithoutGeometry:
             glDeleteShader(this->shader.vertex.id);
             glDeleteShader(this->shader.fragment.id);
+
+        default:
             break;
     }
 
@@ -146,6 +188,9 @@ bool QGlShader::build() {
             if (!this->readShader(this->shader.fragment)) return false;
             if (!this->compile(this->shader.fragment))    return false;
             break;
+
+        default:
+            return false;
     }
 
     return this->link();
