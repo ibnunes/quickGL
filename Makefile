@@ -1,7 +1,7 @@
 CXX := g++
 
 CFLAGS := -Wall -fpermissive
-CFLAGS += -std=c++17
+CFLAGS += -std=c++20
 ifneq ($(OS), 'Windows_NT')
     CFLAGS += -D_POSIX_C_SOURCE
 endif
@@ -11,6 +11,11 @@ LIBS := -lGLEW `pkg-config --libs glfw3` -lpthread -ldl -lfreetype -pthread -lm
 else
 LIBS := -lGL -lGLU -lGLEW `pkg-config --libs glfw3` -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lstdc++fs -lfreetype -pthread -lm
 endif
+
+# Choose one according to your needs:
+# CFLAGS += -DQGL_GLAD
+CFLAGS += -DQGL_GLAD_LOCAL
+# -------------------------------
 
 LDFLAGS := -L/usr/local/lib
 SANITIZERFLAGS := -fsanitize=address -fsanitize=undefined

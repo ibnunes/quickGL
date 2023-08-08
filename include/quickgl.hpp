@@ -9,11 +9,11 @@
 // -----------
 // Main library.
 // Provides the Scene class and the extendable qgl_callback namespace.
-// 
+//
 // AUTHORS:
 // -------
 //      Igor Nunes (https://github.com/thoga31)
-// 
+//
 // LICENSE:
 // -------
 //      GNU GPL V3.0
@@ -22,23 +22,12 @@
 #ifndef QUICKGL_H
 #define QUICKGL_H
 
-#ifdef QGL_GLAD
-    #include <glad/glad.h>
-    #define GLM_FORCE_RADIANS
-#else
-    #ifdef QGL_GLAD_LOCAL
-        #include "glad/glad.h"
-        #define QGL_GLAD
-        #define GLM_FORCE_RADIANS
-    #endif
-#endif
-
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+#include "qgl/common.hpp"
+#include "qgl/camera.hpp"
+#include "qgl/shader.hpp"
 
 #include <string>
 
-#include "camera.hpp"
 
 #ifdef QGL_FREETYPE
     #include <ft2build.h>
@@ -72,7 +61,7 @@ private:
     bool success = false;       // Flag: indicates if launch was successful
 
     GLFWwindow* window;         // The OpenGL window reference
-    
+
     unsigned scr_height;        // Window height
     unsigned scr_width;         // Window width
     string   scr_title;         // Window title
@@ -122,7 +111,7 @@ public:
     void setScrollCallback(GLFWscrollfun);
 
     // Constructor and destructor
-    Scene() {};
+    Scene()  {};
     ~Scene() { this->finalize(); };
 };
 
