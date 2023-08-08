@@ -12,9 +12,9 @@ else
 LIBS := -lGL -lGLU -lGLEW `pkg-config --libs glfw3` -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lstdc++fs -lfreetype -pthread -lm
 endif
 
-# Choose one according to your needs:
+# Choose according to your needs:
 # CFLAGS += -DQGL_GLAD
-CFLAGS += -DQGL_GLAD_LOCAL
+# CFLAGS += -DQGL_GLAD_LOCAL
 # -------------------------------
 
 LDFLAGS := -L/usr/local/lib

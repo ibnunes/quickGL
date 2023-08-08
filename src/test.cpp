@@ -19,8 +19,10 @@
 //      GNU GPL V3.0
 //------------------------------------------------------------------------------
 
-#include <iostream>
+#define QGL_GLAD_LOCAL
 #include "quickgl.hpp"
+
+#include <iostream>
 
 using namespace qgl;
 
@@ -62,7 +64,7 @@ void myRefresh(QGlScene& cls) {
 
 int main(int argc, char const *argv[]) {
     // Create instance
-    QGlScene scene;
+    QGlScene scene(argv[0]);
     scene.preProcessInput = myPreInput;
     scene.processInput    = myInput;
     scene.refresh         = myRefresh;

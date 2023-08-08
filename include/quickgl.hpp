@@ -151,7 +151,7 @@ public:
     /* Properties and fields */
     GLFWwindow*   getWindow();
     QGlMouseData& withMouseData();
-    QGlMouseData& getMouseData();
+    [[deprecated]] QGlMouseData& getMouseData();
     void          setMouseData(float, float, bool);
 
     QGlShader& withProgram(string);
