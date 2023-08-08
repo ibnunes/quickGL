@@ -34,3 +34,6 @@
 # Personalized
 .vscode
 bin
+include/glad
+include/KHR
+src/glad.cpp
